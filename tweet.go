@@ -5,12 +5,13 @@ import (
 	"time"
 )
 
+// curtis was here
+
 type Tweet struct {
 	Contributors         []Contributor          `json:"contributors"` // Not yet generally available to all, so hard to test
 	Coordinates          *Coordinates           `json:"coordinates"`
 	CreatedAt            string                 `json:"created_at"`
 	Entities             Entities               `json:"entities"`
-	ExtendedEntities     Entities               `json:"extended_entities"`
 	FavoriteCount        int                    `json:"favorite_count"`
 	Favorited            bool                   `json:"favorited"`
 	FilterLevel          string                 `json:"filter_level"`
