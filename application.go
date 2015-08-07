@@ -1,7 +1,6 @@
 package anaconda
 
 import (
-	"fmt"
 	"net/url"
 	"time"
 )
@@ -38,10 +37,7 @@ func (c *TwitterApi) GetRateLimitStatus() (RateLimitStatus, error) {
 		return RateLimitStatus{}, err
 	}
 
-	rateLimitStatus, err := parseTimes(raw)
-	if err != nil {
-		return RateLimitStatus{}, err
-	}
+	rateLimitStatus := parseTimes(raw)
 
 	return rateLimitStatus, nil
 }
@@ -91,7 +87,30 @@ type ResourcesRaw struct {
 	Search   ResourceRaw `json:"search"`
 }
 
-func parseTimes(raw RateLimitStatusRawTimes) (RateLimitStatus, error) {
-	fmt.Printf("Raw response: ", raw)
-	return RateLimitStatus{}, nil
+func parseTimes(raw RateLimitStatusRawTimes) RateLimitStatus {
+	var parsedStatus RateLimitStatus
+
+	parsedStatus.RateLimitContext = RateLimitContext{raw.RateLimitContext.AccessToken}
+	parsedStatus.Resources = Resources{
+		Help:     parseRawResource(raw.Resources.Help),
+		Search:   parseRawResource(raw.Resources.Search),
+		Statuses: parseRawResource(raw.Resources.Statuses),
+		Users:    parseRawResource(raw.Resources.Users),
+	}
+
+	return parsedStatus
+}
+
+func parseRawResource(resourceRaw ResourceRaw) Resource {
+	resource := make(Resource)
+
+	for endpoint, endpointStatusRaw := range resourceRaw {
+		resource[endpoint] = EndpointStatus{
+			Limit:     endpointStatusRaw.Limit,
+			Remaining: endpointStatusRaw.Remaining,
+			Reset:     time.Unix(int64(endpointStatusRaw.Reset), 0),
+		}
+	}
+
+	return resource
 }
