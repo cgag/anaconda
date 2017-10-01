@@ -23,6 +23,7 @@ const (
 	TwitterErrorOverCapacity             = 130
 	TwitterErrorInternalError            = 131
 	TwitterErrorCouldNotAuthenticateYou  = 135
+	TwitterErrorAlreadyRequestedFollow   = 160
 	TwitterErrorUnableToFollowMore       = 161
 	TwitterErrorNotAuthorizedToSeeStatus = 179
 	TwitterErrorOverStatusUpdateLimit    = 185
